@@ -28,7 +28,7 @@ jobs:
       # in gradle/wrapper/gradle-wrapper.properties before every build, so the
       # wrapper is always authentic and reproducible.
       - name: Regenerate Gradle wrapper
-        run: gradle wrapper --gradle-version 8.10.2
+        run: gradle wrapper --gradle-version 8.12
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
