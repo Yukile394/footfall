@@ -5,6 +5,7 @@ import com.yukile.footfall.footprint.Footprint;
 import com.yukile.footfall.footprint.FootprintManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.render.LightmapTextureManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -113,6 +114,7 @@ public final class FootprintRenderer {
         float r = ((tint >> 16) & 0xFF) / 255f;
         float g = ((tint >> 8) & 0xFF) / 255f;
         float b = (tint & 0xFF) / 255f;
+        int overlay = OverlayTexture.DEFAULT_UV;
 
         for (int i = 0; i < 4; i++) {
             float lx = local[i][0];
@@ -122,10 +124,11 @@ public final class FootprintRenderer {
             float wz = (float) print.z + (lx * sin + lz * cos);
 
             buffer.vertex(matrix, wx, wy, wz)
-                    .texture(u[i], v[i])
                     .color(r, g, b, alpha)
+                    .texture(u[i], v[i])
+                    .overlay(overlay)
                     .light(light)
-                    .next();
+                    .normal(0f, 1f, 0f);
         }
     }
 }
