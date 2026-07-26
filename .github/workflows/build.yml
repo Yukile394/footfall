@@ -10,6 +10,31 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # Every Minecraft release from 1.21 onward that currently has a
+        # published Fabric API build. Add a new line here the day a new
+        # version drops - everything else (yarn mappings, loader, Fabric
+        # API, ModMenu) is resolved automatically below, no version
+        # numbers need to be looked up by hand.
+        minecraft_version:
+          - "1.21"
+          - "1.21.1"
+          - "1.21.2"
+          - "1.21.3"
+          - "1.21.4"
+          - "1.21.5"
+          - "1.21.6"
+          - "1.21.7"
+          - "1.21.8"
+          - "1.21.9"
+          - "1.21.10"
+          - "1.21.11"
+          - "26.1"
+          - "26.1.1"
+          - "26.1.2"
+          - "26.2"
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -23,6 +48,43 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Resolve Fabric versions for ${{ matrix.minecraft_version }}
+        id: versions
+        run: |
+          set -euo pipefail
+          MC="${{ matrix.minecraft_version }}"
+
+          YARN=$(curl -sf "https://meta.fabricmc.net/v2/versions/yarn/${MC}" | jq -r '.[0].version')
+          LOADER=$(curl -sf "https://meta.fabricmc.net/v2/versions/loader/${MC}" | jq -r '.[0].loader.version')
+          FAPI=$(curl -sf -G "https://api.modrinth.com/v2/project/fabric-api/version" \
+              --data-urlencode "game_versions=[\"${MC}\"]" \
+              --data-urlencode "loaders=[\"fabric\"]" \
+              | jq -r 'sort_by(.date_published) | reverse | .[0].version_number')
+          MODMENU=$(curl -sf -G "https://api.modrinth.com/v2/project/modmenu/version" \
+              --data-urlencode "game_versions=[\"${MC}\"]" \
+              --data-urlencode "loaders=[\"fabric\"]" \
+              | jq -r 'sort_by(.date_published) | reverse | .[0].version_number')
+
+          echo "Minecraft:  $MC"
+          echo "Yarn:       $YARN"
+          echo "Loader:     $LOADER"
+          echo "Fabric API: $FAPI"
+          echo "ModMenu:    $MODMENU"
+
+          for name_value in "yarn:$YARN" "loader:$LOADER" "fapi:$FAPI" "modmenu:$MODMENU"; do
+            name="${name_value%%:*}"
+            value="${name_value#*:}"
+            if [ -z "$value" ] || [ "$value" = "null" ]; then
+              echo "::error::Could not resolve $name for Minecraft $MC (no published build for this version yet?)"
+              exit 1
+            fi
+          done
+
+          echo "yarn=$YARN" >> "$GITHUB_OUTPUT"
+          echo "loader=$LOADER" >> "$GITHUB_OUTPUT"
+          echo "fapi=$FAPI" >> "$GITHUB_OUTPUT"
+          echo "modmenu=$MODMENU" >> "$GITHUB_OUTPUT"
+
       # gradle-wrapper.jar is a binary file and is intentionally not committed.
       # This regenerates it (and the wrapper scripts) from the pinned version
       # in gradle/wrapper/gradle-wrapper.properties before every build, so the
@@ -33,11 +95,19 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew build --no-daemon --stacktrace
+      - name: Build with Gradle (Minecraft ${{ matrix.minecraft_version }})
+        run: |
+          ./gradlew build --no-daemon --stacktrace \
+            -Pminecraft_version="${{ matrix.minecraft_version }}" \
+            -Pyarn_mappings="${{ steps.versions.outputs.yarn }}" \
+            -Ploader_version="${{ steps.versions.outputs.loader }}" \
+            -Pfabric_version="${{ steps.versions.outputs.fapi }}" \
+            -Pmodmenu_version="${{ steps.versions.outputs.modmenu }}" \
+            -Pminecraft_dependency="${{ matrix.minecraft_version }}" \
+            -Pmc_suffix="${{ matrix.minecraft_version }}"
 
       - name: Upload built jar
         uses: actions/upload-artifact@v4
         with:
-          name: footfall
+          name: footfall-${{ matrix.minecraft_version }}
           path: build/libs/*.jar
