@@ -1,0 +1,43 @@
+{
+  "schemaVersion": 1,
+  "id": "footfall",
+  "version": "${version}",
+  "name": "Footfall",
+  "description": "Client-side realistic footprint rendering for players and mobs on soft terrain.",
+  "authors": [
+    "Yukile394"
+  ],
+  "contact": {
+    "sources": "https://github.com/Yukile394/footfall"
+  },
+  "license": "MIT",
+  "icon": "assets/footfall/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.yukile.footfall.client.FootfallClient"
+    ],
+    "modmenu": [
+      "com.yukile.footfall.client.FootfallModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "footfall.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.16.9",
+    "fabric-api": "*",
+    "minecraft": "~1.21.1",
+    "java": ">=21"
+  },
+  "suggests": {
+    "modmenu": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "client"
+      ]
+    }
+  }
+}

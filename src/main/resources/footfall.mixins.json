@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.yukile.footfall.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "LivingEntityStepMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
