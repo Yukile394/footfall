@@ -48,7 +48,7 @@ public enum FootSize {
         if (entity instanceof AbstractHorseEntity) {
             return LARGE;
         }
-        if (entity instanceof net.minecraft.entity.mob.IronGolemEntity
+        if (entity instanceof net.minecraft.entity.passive.IronGolemEntity
                 || entity instanceof net.minecraft.entity.mob.WardenEntity) {
             return GIANT;
         }
