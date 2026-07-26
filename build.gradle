@@ -7,7 +7,11 @@ version = project.mod_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    // When CI passes -Pmc_suffix=1.21.8 the jar is named footfall-1.21.8-1.0.0.jar
+    // so every version's build can be uploaded/kept side by side without collisions.
+    archivesName = project.hasProperty("mc_suffix")
+            ? "${project.archives_base_name}-${project.property('mc_suffix')}"
+            : project.archives_base_name
 }
 
 repositories {
@@ -25,15 +29,16 @@ dependencies {
 
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modCompileOnly "com.terraformersmc:modmenu:11.0.3"
-    modLocalRuntime "com.terraformersmc:modmenu:11.0.3"
+    modCompileOnly "com.terraformersmc:modmenu:${project.modmenu_version}"
+    modLocalRuntime "com.terraformersmc:modmenu:${project.modmenu_version}"
 }
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "minecraft_dependency", project.minecraft_dependency
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": project.version, "minecraft_dependency": project.minecraft_dependency
     }
 }
 
