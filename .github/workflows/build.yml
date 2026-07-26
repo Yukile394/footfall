@@ -1,0 +1,43 @@
+name: Build
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      # gradle-wrapper.jar is a binary file and is intentionally not committed.
+      # This regenerates it (and the wrapper scripts) from the pinned version
+      # in gradle/wrapper/gradle-wrapper.properties before every build, so the
+      # wrapper is always authentic and reproducible.
+      - name: Regenerate Gradle wrapper
+        run: gradle wrapper --gradle-version 8.10.2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew build --no-daemon --stacktrace
+
+      - name: Upload built jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: footfall
+          path: build/libs/*.jar
