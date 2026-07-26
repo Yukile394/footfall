@@ -104,7 +104,7 @@ public final class FootprintSpawner {
                 || entity instanceof net.minecraft.entity.passive.ChickenEntity
                 || entity instanceof net.minecraft.entity.passive.CamelEntity
                 || entity instanceof net.minecraft.entity.passive.LlamaEntity
-                || entity instanceof net.minecraft.entity.mob.IronGolemEntity
+                || entity instanceof net.minecraft.entity.passive.IronGolemEntity
                 || entity instanceof net.minecraft.entity.mob.WardenEntity;
     }
 }
