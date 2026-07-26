@@ -1,0 +1,18 @@
+{
+  "footfall.config.title": "Footfall Settings",
+  "footfall.config.mod_enabled": "Mod",
+  "footfall.config.footprints_enabled": "Footprints",
+  "footfall.config.mob_footprints": "Mob Footprints",
+  "footfall.config.snow_covers": "Snow Covers Prints",
+  "footfall.config.max_footprints": "Max Footprints: %d",
+  "footfall.config.lifetime": "Lifetime (s): %d",
+  "footfall.config.size": "Footprint Size: %s",
+  "footfall.config.density": "Density: %s",
+  "footfall.config.rain_fade": "Rain Fade Speed: %s",
+  "footfall.config.performance": "Performance: %s",
+  "footfall.config.performance.low": "Low",
+  "footfall.config.performance.balanced": "Balanced",
+  "footfall.config.performance.ultra": "Ultra",
+  "footfall.config.on": "On",
+  "footfall.config.off": "Off"
+}

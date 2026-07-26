@@ -1,0 +1,18 @@
+{
+  "footfall.config.title": "Footfall Ayarları",
+  "footfall.config.mod_enabled": "Mod",
+  "footfall.config.footprints_enabled": "Ayak İzleri",
+  "footfall.config.mob_footprints": "Mob Ayak İzleri",
+  "footfall.config.snow_covers": "Kar İzleri Kapatsın",
+  "footfall.config.max_footprints": "Maks. Ayak İzi: %d",
+  "footfall.config.lifetime": "Kalma Süresi (sn): %d",
+  "footfall.config.size": "İz Boyutu: %s",
+  "footfall.config.density": "İz Yoğunluğu: %s",
+  "footfall.config.rain_fade": "Yağmurda Silinme Hızı: %s",
+  "footfall.config.performance": "Performans: %s",
+  "footfall.config.performance.low": "Düşük",
+  "footfall.config.performance.balanced": "Dengeli",
+  "footfall.config.performance.ultra": "Ultra",
+  "footfall.config.on": "Açık",
+  "footfall.config.off": "Kapalı"
+}
